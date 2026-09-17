@@ -1,0 +1,4 @@
+output "app_url" {
+  description = "Public URL of the app"
+  value       = "https://${aws_route53_record.this.fqdn}"
+}
