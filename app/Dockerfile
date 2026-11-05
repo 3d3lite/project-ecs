@@ -1,5 +1,5 @@
 # Use Node.js 22 on Alpine Linux as the build environment
-FROM node@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS builder
+FROM node@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914 AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN DISABLE_ESLINT_PLUGIN=true yarn build
 
 
 # Start a fresh minimal image for the final runtime stage
-FROM node@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2
+FROM node@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914
 
 # Upgrade all Alpine packages to their latest versions to patch known vulnerabilities
 RUN apk upgrade --no-cache
