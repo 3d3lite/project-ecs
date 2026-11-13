@@ -1,0 +1,41 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+
+jobs:
+    terraformapply:
+        runs-on: ubuntu-24.04
+        defaults:
+            run:
+                working-directory: "./terraform"
+        permissions:
+            id-token: write
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Login to AWS
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                role-session-name: github-actions-terraform-session
+                aws-region: eu-west-2
+                
+            - name: Restore terraform.tfvars
+              run: | 
+                printf '%s' "$TFVARS_B64" | base64 --decode > terraform.tfvars
+              env:
+                TFVARS_B64: ${{ secrets.TFVARS_B64 }}
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: 1.15.8
+
+            - name: Terraform Init
+              run: terraform init
+
+            - name: Terraform Apply
+              run: terraform apply -auto-approve
